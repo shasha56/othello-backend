@@ -19,8 +19,10 @@ def reset():
 
 @app.post("/move")
 def move(request: MoveRequest):
-    play_turn(request.action)
-    return {"message": "move"}
+    status, boards = play_turn(request.action)
+    boards = [board.tolist() for board in boards]
+
+    return {"status": status, "boards": boards}
 
 @app.get("/board")
 def board():
