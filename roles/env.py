@@ -264,3 +264,14 @@ class Board:
                 if moves_position:
                     moves[(row,col)] = moves_position        
         return moves
+
+    def count_stones(self): # 石のカウント
+        black_stones, white_stones = 0, 0
+        for row in range(self.size):
+            for col in range(self.size):
+                match(self.board[row][col]):
+                    case 1:
+                        white_stones += 1
+                    case -1:
+                        black_stones += 1
+        print(f"黒 : {black_stones}, 白 : {white_stones}")

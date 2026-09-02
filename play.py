@@ -15,6 +15,7 @@ def play_human_to_human(size): # 人間 vs 人間
 
         match(action):
             case "finish":
+                board.print_board()
                 winner = board.get_winner()
                 match(winner):
                     case -1:
@@ -52,7 +53,8 @@ def play_human_to_ai(size,human_turn,model_name): # AI vs 人間
         print(f"{player_name} のターン：")
 
         current_state = board.get_state()
-        valid_actions = board.get_valid_actions()
+        moves = board.get_valid_moves()
+        valid_actions = board.get_valid_actions(moves)
 
         if current_player == human_turn: # 人間のターン
             coordinate = input().split()
@@ -69,6 +71,7 @@ def play_human_to_ai(size,human_turn,model_name): # AI vs 人間
 
         match(step_result):
             case "finish":
+                board.count_stones()
                 winner = board.get_winner()
                 match(winner):
                     case 0:
@@ -95,4 +98,4 @@ def play_human_to_ai(size,human_turn,model_name): # AI vs 人間
 
 if __name__ == "__main__":
     # play_human_to_human(8)
-    play_human_to_ai(8,-1,"models\checkpoints\seed_0_game_50.pth")
+    play_human_to_ai(8,-1,"models\checkpoints\gammas\gamma0.995.pth")
