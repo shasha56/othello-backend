@@ -11,8 +11,10 @@ def play_evaluation_game(size, evaluation_agent, random_agent, evaluation_agent_
     while True:
         player = board.turn
 
+        player_moves = board.get_valid_moves(player)
+
         current_state = board.get_state()
-        valid_actions = board.get_valid_actions()
+        valid_actions = board.get_valid_actions(player_moves)
 
         if player == evaluation_agent_turn: # 学習AIのターン
             with torch.no_grad():
