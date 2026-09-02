@@ -101,7 +101,7 @@ class Board:
                     case 0:
                         cell = " "
                     case -1:
-                        cell = "×"
+                        cell = "●"
                     case 1:
                         cell = "○"
                     case _:
