@@ -40,7 +40,8 @@ def play_turn(action=None): # 一手進める
     while True:
         with torch.no_grad():
             current_state = board.get_state()
-            valid_actions = board.get_valid_actions()
+            moves = board.get_valid_moves()
+            valid_actions = board.get_valid_actions(moves)
             q_values = agent.get_q_values(current_state)
             action = agent.select_best_action(valid_actions,q_values)
             row, col = board.action_to_position(action)
