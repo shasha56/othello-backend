@@ -19,9 +19,11 @@ def play_game(size,agent,epsilon=0.0): # 自己対戦用
     while True:
         player = board.turn
 
+        player_moves = board.get_valid_moves(player)
+
         current_state = board.get_state()
         
-        valid_actions = board.get_valid_actions()
+        valid_actions = board.get_valid_actions(player_moves)
         q_values = agent.get_q_values(current_state)
         selected_action = agent.select_epsilon_greedy_action(valid_actions,q_values,epsilon) # 確率で最大Q値orランダムな一手を選ぶ
 
@@ -64,11 +66,11 @@ def play_game(size,agent,epsilon=0.0): # 自己対戦用
 def agent_continuous_learn(size,max_learn_game_num,epsilon,gamma,batch_size,target_update_interval,learn_game_step, agent=None,seed=0,model_name=None): # 連続した学習(bufferの維持)
 
     if model_name is None:
-        model_name = f"models/checkpoints/seed_{seed}_game_{game_num}.pth"
+        model_name = f"models/checkpoints/seed_{seed}"
 
     eval_rng = random.Random(10000)
 
-    evaluate_game_num = 500 # 評価時ゲーム数
+    evaluate_game_num = 1000 # 評価時ゲーム数
     evaluate_times = 5 # 評価回数
 
     print(f"モデル評価回数 : {evaluate_times}")
@@ -160,7 +162,7 @@ def agent_continuous_learn(size,max_learn_game_num,epsilon,gamma,batch_size,targ
 
             torch.save( # モデルの保存
                 checkpoint,
-                model_name
+                model_name + f"_learned_game_{game_num}.pth"
             )
             # torch.save( # モデルの保存(colab用)
             #     checkpoint,
