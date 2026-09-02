@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from .app_service import reset_game, play_turn, get_board
+from .app_service import reset_game, play_turn, get_board, is_move
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -29,10 +29,17 @@ def reset():
 @app.post("/move")
 def move(request: MoveRequest):
     status, boards = play_turn(request.action)
-    boards = [board.tolist() for board in boards]
+    boards = [board.flatten().tolist() for board in boards]
 
     return {"status": status, "boards": boards}
 
 @app.get("/board")
 def board():
-    return {"board": get_board().board.tolist()}
+    return {"board": get_board().board.flatten().tolist()}
+
+@app.post("/check")
+def check_moved(request: MoveRequest):
+    if is_move(request.action):
+        return {"status": True}
+    else:
+        return {"status": False}

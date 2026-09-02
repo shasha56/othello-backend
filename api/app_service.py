@@ -66,3 +66,12 @@ def play_turn(action=None): # 一手進める
 
 def get_board(): # 盤面の取得
     return board
+
+def is_move(action): # 合法手の確認
+    row, col = board.action_to_position(action)
+    moves = board.get_valid_moves()
+
+    if (row,col) in moves:
+        return True
+    else:
+        return False
