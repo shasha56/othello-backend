@@ -4,11 +4,11 @@ from train import agent_continuous_learn
 from ai.agent import Agent
 
 def run_experiment(size,max_learn_game_num,learn_step_game_num,parameter_name,parameter_value,writer,model_name=None): # 共通で呼び出す関数
-    seed = 0
-    epsilon = 0.1
-    gamma = 0.9
-    batch_size = 32
-    target_update_interval = 5
+    seed = 2
+    epsilon = 0.2
+    gamma = 0.995
+    batch_size = 128
+    target_update_interval = 2
 
     match(parameter_name):
         case "seed":
@@ -21,9 +21,6 @@ def run_experiment(size,max_learn_game_num,learn_step_game_num,parameter_name,pa
             batch_size = parameter_value
         case "target_update_interval":
             target_update_interval = parameter_value
-        case _:
-            print("error")
-            return
 
     torch.manual_seed(seed)
     random.seed(seed)
@@ -59,7 +56,7 @@ def run_experiment_model_num(size,max_learn_game_num,learn_step_game_num,model_n
 
     for i in range(model_num):
         print(f"seed: {i}")
-        run_experiment(size,max_learn_game_num,learn_step_game_num,"seed",i,writer,f"models/checkpoints/seeds/seed{i}.pth")
+        run_experiment(size,max_learn_game_num,learn_step_game_num,"seed",i,writer,f"models/checkpoints/seeds/seed{i}")
 
     print()
 
@@ -79,7 +76,7 @@ def run_experiment_epsilon(size,max_learn_game_num,learn_step_game_num,writer=No
     for epsilon in epsilons:
         print(f"epsilon: {epsilon}")
     
-        run_experiment(size,max_learn_game_num,learn_step_game_num,"epsilon",epsilon,writer,f"models/checkpoints/epsilons/eps{epsilon}.pth")
+        run_experiment(size,max_learn_game_num,learn_step_game_num,"epsilon",epsilon,writer,f"models/checkpoints/epsilons/eps{epsilon}")
 
     print()
 
@@ -100,7 +97,7 @@ def run_experiment_gamma(size,max_learn_game_num,learn_step_game_num,writer=None
     for gamma in gammas:
         print(f"gamma: {gamma}")
         
-        run_experiment(size,max_learn_game_num,learn_step_game_num,"gamma",gamma,writer,f"models/checkpoints/gammas/gamma{gamma}.pth")  
+        run_experiment(size,max_learn_game_num,learn_step_game_num,"gamma",gamma,writer,f"models/checkpoints/gammas/gamma{gamma}")  
 
     print()
 
@@ -121,7 +118,7 @@ def run_experiment_batch_size(size,max_learn_game_num,learn_step_game_num,writer
     for batch_size in batch_sizes:
         print(f"batch_size: {batch_size}")
 
-        run_experiment(size,max_learn_game_num,learn_step_game_num,"batch_size",batch_size,writer,f"models/checkpoints/batch_sizes/batch_size{batch_size}.pth")
+        run_experiment(size,max_learn_game_num,learn_step_game_num,"batch_size",batch_size,writer,f"models/checkpoints/batch_sizes/batch_size{batch_size}")
 
     print()
 
@@ -142,7 +139,7 @@ def run_experiment_target_update_interval(size,max_learn_game_num,learn_step_gam
     for target_update_interval in target_update_intervals:
         print(f"target_update_interval: {target_update_interval}")
 
-        run_experiment(size,max_learn_game_num,learn_step_game_num,"target_update_interval",target_update_interval,writer,f"models/checkpoints/target_update_intervals/target_update_interval{target_update_interval}.pth")
+        run_experiment(size,max_learn_game_num,learn_step_game_num,"target_update_interval",target_update_interval,writer,f"models/checkpoints/target_update_intervals/target_update_interval{target_update_interval}")
 
     print()
 
@@ -150,51 +147,53 @@ if __name__ == "__main__":
     start = time.perf_counter()
 
     size = 8
-    max_learn_game_num = 1
-    learn_step_game_num = 1
-    model_num = 1
+    max_learn_game_num = 60000
+    learn_step_game_num = 2500
+    model_num = 5
 
     print(f"盤面 {size}×{size}")
 
-    with open("logs/othello_model_learn_log.csv",mode="a",newline="") as f:
+    with open("logs/othello_model_learn_test_log.csv",mode="w",newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["size","seed","cumulative_game_num","mean_win_rate","eval_std","epsilon","gamma","batch_size","target_update_interval"])
 
-        run_experiment_model_num(
-            size,
-            max_learn_game_num,
-            learn_step_game_num,
-            model_num,
-            writer
-        )
+        run_experiment(size,max_learn_game_num,learn_step_game_num,"test",0,writer,f"models/checkpoints/test/test")
 
-        run_experiment_epsilon(
-            size,
-            max_learn_game_num,
-            learn_step_game_num,
-            writer
-        )
+        # run_experiment_model_num(
+        #     size,
+        #     max_learn_game_num,
+        #     learn_step_game_num,
+        #     model_num,
+        #     writer
+        # )
 
-        run_experiment_gamma(
-            size,
-            max_learn_game_num,
-            learn_step_game_num,
-            writer
-        )
+        # run_experiment_epsilon(
+        #     size,
+        #     max_learn_game_num,
+        #     learn_step_game_num,
+        #     writer
+        # )
 
-        run_experiment_batch_size(
-            size,
-            max_learn_game_num,
-            learn_step_game_num,
-            writer
-        )
+        # run_experiment_gamma(
+        #     size,
+        #     max_learn_game_num,
+        #     learn_step_game_num,
+        #     writer
+        # )
 
-        run_experiment_target_update_interval(
-            size,
-            max_learn_game_num,
-            learn_step_game_num,
-            writer
-        )
+        # run_experiment_batch_size(
+        #     size,
+        #     max_learn_game_num,
+        #     learn_step_game_num,
+        #     writer
+        # )
+
+        # run_experiment_target_update_interval(
+        #     size,
+        #     max_learn_game_num,
+        #     learn_step_game_num,
+        #     writer
+        # )
 
     end = time.perf_counter()
 
