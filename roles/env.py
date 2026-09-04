@@ -275,3 +275,4 @@ class Board:
                     case -1:
                         black_stones += 1
         print(f"黒 : {black_stones}, 白 : {white_stones}")
+        return black_stones, white_stones

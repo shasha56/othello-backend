@@ -23,6 +23,7 @@ def play_turn(action=None): # 一手進める
     boards = [] # 連続した盤面の保存
     actions = [] # 連続した次の合法手の保存
     turns = [] # 連続したターンの保存
+    stones = []
 
     if action is not None:
         # 人間の手
@@ -33,19 +34,21 @@ def play_turn(action=None): # 一手進める
         boards.append(human_board)
         actions.append(human_next_actions)
         turns.append(board.turn)
+        black_stones, white_stones = board.count_stones()
+        stones.append((black_stones, white_stones))
 
         match(human_step_result):
             case "finish":
                 winner = board.get_winner()
                 match(winner):
                     case 0:
-                        return "draw", boards, actions, turns
+                        return "draw", boards, actions, turns, stones
                     case 1:
-                        return "white", boards, actions, turns
+                        return "white", boards, actions, turns, stones
                     case -1:
-                        return "black", boards, actions, turns
+                        return "black", boards, actions, turns, stones
             case "pass":
-                return "pass", boards, actions, turns
+                return "pass", boards, actions, turns, stones
 
     while True:
         with torch.no_grad():
@@ -62,21 +65,23 @@ def play_turn(action=None): # 一手進める
             boards.append(ai_board)
             actions.append(ai_next_actions)
             turns.append(board.turn)
+            black_stones, white_stones = board.count_stones()
+            stones.append((black_stones, white_stones))
 
             match(ai_step_result):
                 case "finish":
                     winner = board.get_winner()
                     match(winner):
                         case 0:
-                            return "draw", boards, actions, turns
+                            return "draw", boards, actions, turns, stones
                         case 1:
-                            return "white", boards, actions, turns
+                            return "white", boards, actions, turns, stones
                         case -1:
-                            return "black", boards, actions, turns
+                            return "black", boards, actions, turns, stones
                 case "pass":
                     continue
                 case "next":
-                    return "next", boards, actions, turns
+                    return "next", boards, actions, turns, stones
 
 def get_board(): # 盤面の取得
     return board
@@ -93,8 +98,13 @@ def is_move(action): # 合法手の確認
     else:
         return False
 
-def valid_actions():
+def valid_actions(): # 合法手の取得
     moves = board.get_valid_moves()
     actions = board.get_valid_actions(moves)
 
     return actions
+
+def count_stone(): # 石数カウント
+    black_stones, white_stones = board.count_stones()
+
+    return black_stones, white_stones

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from .app_service import reset_game, play_turn, get_board, is_move, valid_actions, get_turn
+from .app_service import reset_game, play_turn, get_board, is_move, valid_actions, get_turn, count_stone
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -29,19 +29,21 @@ def reset():
 @app.post("/move")
 def move(request: MoveRequest):
     if is_move(request.action):
-        status, boards, next_valid_actions, turns = play_turn(request.action)
+        status, boards, next_valid_actions, turns, stone_count = play_turn(request.action)
         boards = [board.flatten().tolist() for board in boards]
     else:
         status = "failed"
         boards = [get_board().board.flatten().tolist()]
         next_valid_actions = valid_actions()
         turns = get_turn()
+        stone_count = [(count_stone())]
 
-    return {"status": status, "boards": boards, "next_actions": next_valid_actions, "turns": turns}
+    return {"status": status, "boards": boards, "next_actions": next_valid_actions, "turns": turns, "stone_count": stone_count}
 
 @app.get("/board")
 def board():
-    return {"board": get_board().board.flatten().tolist(), "next_actions": valid_actions(), "turns": get_turn()}
+    stone_count = [(count_stone())]
+    return {"board": get_board().board.flatten().tolist(), "next_actions": valid_actions(), "turns": get_turn(), "stone_count": stone_count}
 
 @app.post("/check")
 def check_moved(request: MoveRequest):
