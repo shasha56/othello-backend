@@ -29,13 +29,12 @@ def reset():
 @app.post("/move")
 def move(request: MoveRequest):
     if is_move(request.action):
-        status, boards = play_turn(request.action)
+        status, boards, next_valid_actions = play_turn(request.action)
         boards = [board.flatten().tolist() for board in boards]
     else:
         status = "failed"
         boards = [get_board().board.flatten().tolist()]
-
-    next_valid_actions = valid_actions()
+        next_valid_actions = valid_actions()
 
     return {"status": status, "boards": boards, "next_actions": next_valid_actions}
 

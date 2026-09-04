@@ -17,25 +17,29 @@ def reset_game(): # 盤面の初期化
 
 def play_turn(action=None): # 一手進める
     boards = [] # 連続した盤面の保存
+    actions = [] # 連続した次の合法手の保存
+
     if action is not None:
         # 人間の手
         row, col = board.action_to_position(action)
         human_step_result = board.step(row,col)
         human_board = board.board.copy() # 人間着手後の盤面
+        human_next_actions = valid_actions()
         boards.append(human_board)
+        actions.append(human_next_actions)
 
         match(human_step_result):
             case "finish":
                 winner = board.get_winner()
                 match(winner):
                     case 0:
-                        return "draw", boards
+                        return "draw", boards, actions
                     case 1:
-                        return "white", boards
+                        return "white", boards, actions
                     case -1:
-                        return "black", boards
+                        return "black", boards, actions
             case "pass":
-                return "pass", boards
+                return "pass", boards, actions
 
     while True:
         with torch.no_grad():
@@ -48,22 +52,24 @@ def play_turn(action=None): # 一手進める
 
             ai_step_result = board.step(row,col)
             ai_board = board.board.copy() # AI着手後の盤面
+            ai_next_actions = valid_actions()
             boards.append(ai_board)
+            actions.append(ai_next_actions)
 
             match(ai_step_result):
                 case "finish":
                     winner = board.get_winner()
                     match(winner):
                         case 0:
-                            return "draw", boards
+                            return "draw", boards, actions
                         case 1:
-                            return "white", boards
+                            return "white", boards, actions
                         case -1:
-                            return "black", boards
+                            return "black", boards, actions
                 case "pass":
                     continue
                 case "next":
-                    return "next", boards
+                    return "next", boards, actions
 
 def get_board(): # 盤面の取得
     return board
