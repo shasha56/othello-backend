@@ -76,3 +76,9 @@ def is_move(action): # 合法手の確認
         return True
     else:
         return False
+
+def valid_actions():
+    moves = board.get_valid_moves()
+    actions = board.get_valid_actions(moves)
+
+    return actions
