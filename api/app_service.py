@@ -24,7 +24,7 @@ def play_turn(action=None): # 一手進める
         row, col = board.action_to_position(action)
         human_step_result = board.step(row,col)
         human_board = board.board.copy() # 人間着手後の盤面
-        human_next_actions = valid_actions()
+        human_next_actions = board.get_valid_actions(board.get_valid_moves())
         boards.append(human_board)
         actions.append(human_next_actions)
 
@@ -52,7 +52,7 @@ def play_turn(action=None): # 一手進める
 
             ai_step_result = board.step(row,col)
             ai_board = board.board.copy() # AI着手後の盤面
-            ai_next_actions = valid_actions()
+            ai_next_actions = board.get_valid_actions(board.get_valid_moves())
             boards.append(ai_board)
             actions.append(ai_next_actions)
 
