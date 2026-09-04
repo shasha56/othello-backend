@@ -2,14 +2,18 @@
 from roles.env import Board
 from ai.agent import Agent
 import torch
+from pathlib import Path
 
 board = Board(8)
 agent = Agent(8)
 
-model_name = "../models/gamma0.995.pth" # AIモデル
+model_dir = Path("models")
+files = list(model_dir.glob("*.pth"))
 
-# checkpoint = torch.load(model_name, weights_only=False)
-# agent.model.load_state_dict(checkpoint["model_state_dict"])
+if len(files) == 1:
+    checkpoint = torch.load(files[0], weights_only=False)
+    agent.model.load_state_dict(checkpoint["model_state_dict"])
+agent.model.eval()
 
 def reset_game(): # 盤面の初期化
     global board
