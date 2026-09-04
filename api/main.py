@@ -41,7 +41,7 @@ def move(request: MoveRequest):
 
 @app.get("/board")
 def board():
-    return {"board": get_board().board.flatten().tolist()}
+    return {"board": get_board().board.flatten().tolist(), "next_actions": valid_actions()}
 
 @app.post("/check")
 def check_moved(request: MoveRequest):
