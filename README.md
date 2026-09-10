@@ -8,22 +8,23 @@ Python / FastAPIで実装したオセロAI対戦Webアプリのバックエン�
 
 ## 主な機能
 
-* オセロ盤面の管理
-* 合法手判定
-* ユーザーの着手処理
-* DQNモデルによるAIの着手選択
-* パス処理
-* 勝敗判定
-* 石数の集計
-* ゲームのリセット
-* フロントエンド向けREST API
+- オセロ盤面の管理
+- 合法手判定
+- ユーザーの着手処理
+- DQNモデルによるAIの着手選択
+- パス処理
+- 勝敗判定
+- 石数の集計
+- ゲームのリセット
+- フロントエンド向けREST API
 
 ## 使用技術
 
-* Python
-* FastAPI
-* PyTorch
-* NumPy
+- Python
+- FastAPI
+- PyTorch
+- NumPy
+- Render
 
 ## API
 
@@ -77,11 +78,24 @@ APIドキュメント:
 http://127.0.0.1:8000/docs
 ```
 
+## 環境変数
+フロントエンドからのアクセスを許可するため、FRONTEND_URL を設定します。
+例:
+FRONTEND_URL=http://localhost:3000
+本番環境では、Vercel上のフロントエンドURLを設定します。
+
+## デプロイ
+バックエンドはRenderにデプロイしています。
+本番環境では、RenderのStart Commandとして以下を使用します。
+
+```bash
+uvicorn api.main:app --host 0.0.0.0 --port $PORT
+```
+
 ## 今後の予定
 
-* ゲーム状態の永続化
-* Tursoによる戦績管理
-* 匿名ユーザーごとのゲーム管理
-* API周辺のテスト追加
-* Renderへのデプロイ
-* AIモデルの学習改善
+- ゲーム状態の永続化
+- Tursoによる戦績管理
+- 匿名ユーザーごとのゲーム管理
+- API周辺のテスト追加
+- AIモデルの学習改善
