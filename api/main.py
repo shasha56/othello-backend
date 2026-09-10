@@ -2,12 +2,19 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from .app_service import reset_game, play_turn, get_board, is_move, valid_actions, get_turn, count_stone
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 app = FastAPI()
 
+frontend_url = os.getenv("FRONTEND_URL")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://172.17.0.2:3000",
+        frontend_url
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
