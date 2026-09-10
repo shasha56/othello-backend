@@ -7,6 +7,7 @@ import os
 app = FastAPI()
 
 frontend_url = os.getenv("FRONTEND_URL")
+print("FRONTEND_URL =", repr(frontend_url)) # 環境変数確認用
 
 app.add_middleware(
     CORSMiddleware,
